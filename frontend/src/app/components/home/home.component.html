@@ -1,0 +1,127 @@
+<div class="container-fluid mt-3">
+  <img style="display: none"
+       src="https://www.google.com/accounts/Logout"
+       *ngIf="signOutGoogleVar"
+       id="googleSignOutURL"/>
+  <div class="row">
+    <div style="width: 48.5%">
+      <div class="card ml-2" style="background-color: gainsboro;">
+        <div class="card-body">
+          <h5 class="card-title text-center text-white bg-primary py-2 rounded">
+            {{googleService.getUserEmail() || 'Google Drive'}}
+          </h5>
+          <table class="table table-sm table-hover" *ngIf="googleService.isSignedIn()">
+            <thead>
+            <tr>
+              <th></th>
+              <th style="max-width: 59%;">Имя файла</th>
+              <th style="min-width: 20%;">
+                <div>Размер файла</div>
+                <div>(в байтах)</div>
+              </th>
+              <th>Дата загрузки</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let file of googleFiles; index as i"
+                (click)="selectGoogleFiles(file)"
+                [class.table-active]="selectedGoogleFiles.indexOf(file) > -1">
+              <td>{{i + 1}}</td>
+              <td>{{file.title}}</td>
+              <td>{{file.fileSize}}</td>
+              <td>{{file.created}}</td>
+            </tr>
+            <tr *ngIf="googleFiles.length == 0">
+              <td colspan="2">Файлы не найдены</td>
+            </tr>
+            </tbody>
+          </table>
+          <div style="display: flex; justify-content: center">
+            <button class="btn btn-primary" (click)="signInGoogle()" *ngIf="!googleService.isSignedIn()">Войти</button>
+            <button class="btn btn-primary" (click)="signOutGoogle()" *ngIf="googleService.isSignedIn()">Выйти</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="width: 3%; text-align: center">
+      <div class="btn-group-vertical" style="width: 90%; position: sticky; top: 10px;">
+        <button class="btn btn btn-primary mb-2 btn-sm"
+                placement="top"
+                ngbTooltip="Синхронизировать"
+                container="body"
+                (click)="synchronizeFiles()"
+                [disabled]="(googleFiles.length === 0 && yandexFiles.length === 0)  ||
+                !googleService.isSignedIn() || !yandexService.isSignedIn()">
+          <i class="fa fa-refresh"></i>
+        </button>
+        <button class="btn btn btn-primary mb-2 btn-sm"
+                placement="top"
+                ngbTooltip="Отправить на Яндекс.Диск"
+                container="body"
+                (click)="sendGoogleFilesToYandexDisk()"
+                [disabled]="selectedGoogleFiles.length === 0
+                || !googleService.isSignedIn()
+                || !yandexService.isSignedIn()">
+          <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+        </button>
+        <button class="btn btn btn-primary mb-2 btn-sm"
+                placement="top"
+                ngbTooltip="Отправить на Google Drive"
+                container="body"
+                (click)="sendYandexFilesToGoogleDrive()"
+                [disabled]="selectedYandexFiles.length === 0
+                || !googleService.isSignedIn()
+                || !yandexService.isSignedIn()">
+          <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+        </button>
+        <button class="btn btn btn-primary mb-2 btn-sm"
+                placement="top"
+                ngbTooltip="Удалить"
+                container="body"
+                (click)="deleteSelectedFiles()"
+                [disabled]="selectedGoogleFiles.length === 0 && selectedYandexFiles.length === 0">
+          <i class="fa fa-trash-o" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div style="width: 48.5%">
+      <div class="card mr-2" style="background-color: lavender">
+        <div class="card-body">
+          <h5 class="card-title text-center text-white bg-primary py-2 rounded">
+            {{yandexService.getUserEmail() || 'Яндекс.Диск'}}
+          </h5>
+          <table class="table table-sm table-hover" *ngIf="yandexService.isSignedIn()">
+            <thead>
+            <tr>
+              <th></th>
+              <th style="max-width: 50%;">Имя файла</th>
+              <th style="min-width: 20%;">
+                <div>Размер файла</div>
+                <div>(в байтах)</div>
+              </th>
+              <th>Дата загрузки</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let file of yandexFiles; index as i"
+                (click)="selectYandexFiles(file)"
+                [class.table-active]="selectedYandexFiles.indexOf(file) > -1">
+              <td>{{i + 1}}</td>
+              <td>{{file.name}}</td>
+              <td>{{file.size}}</td>
+              <td>{{file.created}}</td>
+            </tr>
+            <tr *ngIf="yandexFiles.length == 0">
+              <td colspan="2">Файлы не найдены</td>
+            </tr>
+            </tbody>
+          </table>
+          <div style="display: flex; justify-content: center">
+            <button class="btn btn-primary" (click)="signInYandex()" *ngIf="!yandexService.isSignedIn()">Войти</button>
+            <button class="btn btn-primary" (click)="signOutYandex()" *ngIf="yandexService.isSignedIn()">Выйти</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

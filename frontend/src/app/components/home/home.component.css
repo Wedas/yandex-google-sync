@@ -1,0 +1,14 @@
+.table {
+  font-size: 14px;
+}
+.table thead th {
+  vertical-align: top;
+}
+table > thead > tr > th,
+table > tbody > tr > td {
+  border: none;
+}
+table > thead > tr,
+table > tbody > tr {
+  border-bottom: 1px solid black;
+}

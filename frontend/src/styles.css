@@ -1,7 +1,7 @@
 .login-wrapper {
   position: absolute;
   margin: auto;
-  top: 0;
+  top: -20%;
   right: 0;
   bottom: 0;
   left: 0;
@@ -9,5 +9,4 @@
   background-color: lavender;
   width: 400px;
   height: 200px;
-  border: 1px solid aqua;
 }

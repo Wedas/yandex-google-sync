@@ -17,6 +17,7 @@ import {AlertComponent} from './components/alert/alert.component';
 import {NotifierService} from './services/notifier/notifier.service';
 import {LoaderService} from './services/loader/loader.service';
 import {LoaderComponent} from './components/loader/loader.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {LoaderComponent} from './components/loader/loader.component';
     AppRoutingModule,
     HttpClientModule,
     NgbModule,
+    ReactiveFormsModule
   ],
   providers: [
     HttpClientModule,

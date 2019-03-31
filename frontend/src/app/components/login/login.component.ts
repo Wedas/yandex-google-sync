@@ -1,10 +1,18 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {LoaderService} from '../../services/loader/loader.service';
 import {AuthService} from '../../services/auth/auth.service';
 import {AlertService} from '../../services/alert/alert.service';
+
+function checkPasswords(group: FormGroup) {
+  console.log('group.controls.password.value', group.controls.password.value);
+  console.log('group.controls.confirmPass.value', group.controls.confirmPass.value);
+  const pass = group.controls.password.value;
+  const confirmPass = group.controls.confirmPass.value;
+  return pass === confirmPass ? null : {notSame: true};
+}
 
 @Component({
   selector: 'app-login',
@@ -29,14 +37,16 @@ export class LoginComponent implements OnInit {
     if (this.authService.isSignedIn()) {
       this.router.navigateByUrl('/home');
     }
+
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
     this.signUpForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
-    });
+      password: ['', Validators.required],
+      confirmPass: ['', Validators.required]
+    }, {validator: checkPasswords});
   }
 
   ngOnInit() {
@@ -63,6 +73,23 @@ export class LoginComponent implements OnInit {
     if (this.signUpForm.invalid) {
       return;
     }
+    this.loaderService.onNotify(true);
+    this.authService.registerUser(this.signUp.email.value, this.signUp.password.value).subscribe(response => {
+        this.authService.login(this.signUp.email.value, this.signUp.password.value)
+          .subscribe(
+            data => {
+              this.loaderService.onNotify(false);
+              this.router.navigateByUrl('/home');
+            },
+            error => {
+              this.alertService.error('Неверный логин/пароль');
+              this.loaderService.onNotify(false);
+            });
+    },
+      error => {
+        this.alertService.error('Логин занят');
+        this.loaderService.onNotify(false);
+      });
   }
 
   submitLogin() {

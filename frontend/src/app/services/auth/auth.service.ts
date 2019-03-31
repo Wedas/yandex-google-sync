@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import {YandexService} from '../yandex/yandex.service';
 import {GoogleService} from '../google/google.service';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -37,5 +38,9 @@ export class AuthService {
 
   getUserName() {
     return localStorage.getItem(this.currentUser) ? JSON.parse(localStorage.getItem(this.currentUser)).email : '';
+  }
+
+  registerUser(username: string, password: string): Observable<any> {
+    return this.http.post<any>('/registerUser', {email: username, password: password});
   }
 }

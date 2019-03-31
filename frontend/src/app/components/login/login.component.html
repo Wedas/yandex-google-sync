@@ -50,6 +50,17 @@
           </div>
         </div>
         <div class="form-group">
+          <label for="confirmPass">Подтвердите пароль</label>
+          <input type="password" formControlName="confirmPass" class="form-control"
+                 [ngClass]="{ 'is-invalid': signUpFormSubmitted &&
+                 (signUp.confirmPass.errors || signUpForm.errors) }" />
+          <div *ngIf="signUpFormSubmitted && (signUp.confirmPass.errors || signUpForm.errors)"
+               class="invalid-feedback">
+            <div *ngIf="signUp.confirmPass.errors && signUp.confirmPass.errors.required">Обязательное поле</div>
+            <div *ngIf="signUpForm.errors && signUpForm.errors.notSame">Пароли не совпадают</div>
+          </div>
+        </div>
+        <div class="form-group">
           <button class="btn btn-primary">Зарегистрироваться</button>
         </div>
       </form>

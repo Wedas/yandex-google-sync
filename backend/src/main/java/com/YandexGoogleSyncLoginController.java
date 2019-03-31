@@ -10,6 +10,8 @@ import com.model.yandex.YandexUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -101,6 +103,18 @@ public class YandexGoogleSyncLoginController {
             if (prevGoogleUser != null) {
                 googleRepository.delete(prevGoogleUser);
             }
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/registerUser")
+    public ResponseEntity registerUser(@RequestBody UserEntity user) {
+        try {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setPassword(encoder.encode(user.getPassword()));
+            userRepository.save(user);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

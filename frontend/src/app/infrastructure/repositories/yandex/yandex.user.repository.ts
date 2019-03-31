@@ -30,4 +30,10 @@ export class YandexUserRepository {
     localStorage.removeItem(YANDEX_USER_EMAIL);
   }
 
+  getYandexUser() {
+    return {
+      accessToken: this.getToken(),
+      email: this.getUserEmail()
+    };
+  }
 }

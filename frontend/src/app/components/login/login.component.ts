@@ -1,7 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {LoaderService} from '../../services/loader/loader.service';
+import {AuthService} from '../../services/auth/auth.service';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +20,15 @@ export class LoginComponent implements OnInit {
   loginFormSubmitted = false;
   signUpFormSubmitted = false;
 
-  constructor(private http: HttpClient, private router: Router, private formBuilder: FormBuilder) {
+  constructor(private http: HttpClient,
+              private router: Router,
+              private formBuilder: FormBuilder,
+              private loaderService: LoaderService,
+              private authService: AuthService,
+              private alertService: AlertService) {
+    if (this.authService.isSignedIn()) {
+      this.router.navigateByUrl('/home');
+    }
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -52,7 +63,6 @@ export class LoginComponent implements OnInit {
     if (this.signUpForm.invalid) {
       return;
     }
-    console.log('submitSignUp');
   }
 
   submitLogin() {
@@ -60,6 +70,16 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.invalid) {
       return;
     }
-    console.log('submitLogin');
+    this.loaderService.onNotify(true);
+    this.authService.login(this.login.email.value, this.login.password.value)
+      .subscribe(
+        data => {
+          this.loaderService.onNotify(false);
+          this.router.navigateByUrl('/home');
+        },
+        error => {
+          this.alertService.error('Неверный логин/пароль');
+          this.loaderService.onNotify(false);
+        });
   }
 }

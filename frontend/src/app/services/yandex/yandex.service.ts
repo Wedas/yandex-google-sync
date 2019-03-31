@@ -35,6 +35,7 @@ export class YandexService {
               thisService.http.get<any>('https://login.yandex.ru/info?oauth_token='
                 + thisService.yandexUser.getToken()).subscribe(userInfo => {
                 thisService.saveUserEmail(userInfo.default_email);
+                thisService.saveYandexUserToDB();
                 resolve();
               });
             }
@@ -55,6 +56,7 @@ export class YandexService {
   signOut() {
     this.yandexUser.clearToken();
     this.yandexUser.clearUserEmail();
+    this.http.delete('/deleteYandexUser').subscribe();
   }
 
   listFiles(): Observable<any> {
@@ -94,5 +96,20 @@ export class YandexService {
 
   getUserEmail(): string {
     return this.yandexUser.getUserEmail();
+  }
+
+  saveYandexUserToStorage(yandexUser) {
+    if (yandexUser) {
+      if (yandexUser.email) {
+        this.saveUserEmail(yandexUser.email);
+      }
+      if (yandexUser.accessToken) {
+        this.yandexUser.saveToken(yandexUser.accessToken);
+      }
+    }
+  }
+
+  saveYandexUserToDB() {
+    this.http.post('/saveYandexUserToDB', this.yandexUser.getYandexUser()).subscribe();
   }
 }

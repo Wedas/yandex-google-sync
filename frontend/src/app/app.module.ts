@@ -18,6 +18,9 @@ import {NotifierService} from './services/notifier/notifier.service';
 import {LoaderService} from './services/loader/loader.service';
 import {LoaderComponent} from './components/loader/loader.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {AuthService} from './services/auth/auth.service';
+import {AuthGuard} from './infrastructure/guard/auth.guard';
+import {HeaderComponent} from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +28,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     LoginComponent,
     HomeComponent,
     AlertComponent,
-    LoaderComponent
+    LoaderComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -47,7 +51,9 @@ import {ReactiveFormsModule} from '@angular/forms';
     GoogleUserRepository,
     AlertService,
     NotifierService,
-    LoaderService
+    LoaderService,
+    AuthService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

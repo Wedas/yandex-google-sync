@@ -50,4 +50,12 @@ export class GoogleUserRepository {
     localStorage.removeItem(GOOGLE_USER_EMAIL);
   }
 
+  getGoogleUser() {
+    return {
+      accessToken: this.getAccessToken(),
+      accessTokenExpiration: this.getAccessTokenExpiration(),
+      refreshToken: this.getRefreshToken(),
+      email: this.getUserEmail()
+    };
+  }
 }

@@ -1,0 +1,18 @@
+<nav class="navbar navbar-dark bg-primary">
+  <div class="first-header-column">
+      <span class="navbar-brand">
+      Синхронизация Google Drive и Яндекс.Диск
+    </span>
+  </div>
+  <div class="nav-item dropdown second-header-column" *ngIf="isSignedIn()">
+    <div>
+      <a class="nav-link dropdown-toggle navbar-brand" href="#" role="button"
+         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {{getUserName()}}
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item" href="#" (click)="signOut()">Выйти</a>
+      </div>
+    </div>
+  </div>
+</nav>

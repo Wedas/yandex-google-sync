@@ -1,0 +1,32 @@
+{
+  "/login": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": false
+  },
+  "/logout": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": false
+  },
+  "/saveYandexUserToDB": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": false
+  },
+  "/deleteYandexUser": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": false
+  },
+  "/saveGoogleUserToDB": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": false
+  },
+  "/deleteGoogleUser": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": false
+  }
+}

@@ -33,7 +33,6 @@ export class GoogleService {
       function checkGoogleWindow(child) {
         try {
           if (child.location.host === 'localhost:4200') {
-            console.log('href', child.location);
             const code = /code=([^&]+)/.exec(child.location.href)[1];
             clearInterval(timer);
             child.close();
@@ -53,6 +52,7 @@ export class GoogleService {
                 headers: new HttpHeaders().set('Authorization', 'Bearer ' + thisService.googleUser.getAccessToken())
               }).subscribe(userInfo => {
                 thisService.saveUserEmail(userInfo.email);
+                thisService.saveGoogleUserToDB();
                 resolve();
               });
             });
@@ -74,6 +74,7 @@ export class GoogleService {
     this.googleUser.clearAccessToken();
     this.googleUser.clearRefreshToken();
     this.googleUser.clearUserEmail();
+    this.http.delete('/deleteGoogleUser').subscribe();
   }
 
   listFiles(): Observable<any> {
@@ -141,6 +142,7 @@ export class GoogleService {
         const currentDate = new Date();
         const tokenExpirationDate = currentDate.setSeconds(currentDate.getSeconds() + parseInt(response.expires_in, 10));
         this.googleUser.saveAccessToken(response.access_token, tokenExpirationDate);
+        this.saveGoogleUserToDB();
         resolve();
       });
     });
@@ -176,5 +178,24 @@ export class GoogleService {
 
   getUserEmail(): string {
     return this.googleUser.getUserEmail();
+  }
+
+  saveGoogleUser(googleUser) {
+    if (googleUser) {
+      if (googleUser.accessToken && googleUser.accessTokenExpiration) {
+        this.googleUser
+          .saveAccessToken(googleUser.accessToken, new Date(googleUser.accessTokenExpiration).getTime());
+      }
+      if (googleUser.refreshToken) {
+        this.googleUser.saveRefreshToken(googleUser.refreshToken);
+      }
+      if (googleUser.email) {
+        this.saveUserEmail(googleUser.email);
+      }
+    }
+  }
+
+  saveGoogleUserToDB() {
+    this.http.post('/saveGoogleUserToDB', this.googleUser.getGoogleUser()).subscribe();
   }
 }

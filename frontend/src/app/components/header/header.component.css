@@ -1,0 +1,12 @@
+.first-header-column {
+  text-align: center;
+  padding-left: 25%;
+  width: 75%;
+}
+.second-header-column {
+  max-width: 25%;
+  text-align: right;
+}
+.dropdown-menu {
+  right: 0;
+}

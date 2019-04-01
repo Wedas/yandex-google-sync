@@ -22,7 +22,9 @@ export class GoogleUserRepository {
   }
 
   saveRefreshToken(refreshToken: string) {
-    localStorage.setItem(GOOGLE_REFRESH_TOKEN, refreshToken);
+    if (refreshToken) {
+      localStorage.setItem(GOOGLE_REFRESH_TOKEN, refreshToken);
+    }
   }
 
   getRefreshToken(): string {

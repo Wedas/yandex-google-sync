@@ -16,9 +16,9 @@ export class GoogleService {
   client_secret = 'xxx';
   googleCodeUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' +
     'scope=https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email&' +
+    'access_type=offline&' +
     'redirect_uri=http://localhost:4200&' +
     'response_type=code&' +
-    'access_type=offline&' +
     'client_id=' + this.client_id;
   googleTokenUrl = 'https://www.googleapis.com/oauth2/v3/token';
 
@@ -32,7 +32,7 @@ export class GoogleService {
 
       function checkGoogleWindow(child) {
         try {
-          if (child.location.host === 'localhost:4200') {
+          if (child.location.host === 'localhost:4200' || child.location.host === 'localhost:4200/home') {
             const code = /code=([^&]+)/.exec(child.location.href)[1];
             clearInterval(timer);
             child.close();
@@ -74,7 +74,7 @@ export class GoogleService {
     this.googleUser.clearAccessToken();
     this.googleUser.clearRefreshToken();
     this.googleUser.clearUserEmail();
-    this.http.delete('/deleteGoogleUser').subscribe();
+    this.deleteGoogleUserFromDB();
   }
 
   listFiles(): Observable<any> {
@@ -138,11 +138,13 @@ export class GoogleService {
       this.http.post<any>(this.googleTokenUrl, requestBody, {
         headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')
       }).subscribe(response => {
-        console.log('from reauth', response);
         const currentDate = new Date();
         const tokenExpirationDate = currentDate.setSeconds(currentDate.getSeconds() + parseInt(response.expires_in, 10));
         this.googleUser.saveAccessToken(response.access_token, tokenExpirationDate);
         this.saveGoogleUserToDB();
+        resolve();
+      }, error => {
+        this.signOut();
         resolve();
       });
     });
@@ -197,5 +199,9 @@ export class GoogleService {
 
   saveGoogleUserToDB() {
     this.http.post('/saveGoogleUserToDB', this.googleUser.getGoogleUser()).subscribe();
+  }
+
+  deleteGoogleUserFromDB() {
+    this.http.delete('/deleteGoogleUser').subscribe();
   }
 }

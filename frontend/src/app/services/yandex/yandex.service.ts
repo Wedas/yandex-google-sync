@@ -25,8 +25,7 @@ export class YandexService {
 
       function checkYandexWindow(child) {
         try {
-          if (child.location.host === 'localhost:4200') {
-            console.log('child.location', child.location);
+          if (child.location.host === 'localhost:4200' || child.location.host === 'localhost:4200/home') {
             const accessToken = /access_token=([^&]+)/.exec(child.location.hash)[1];
             child.close();
             clearInterval(timer);

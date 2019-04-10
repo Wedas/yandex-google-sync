@@ -278,7 +278,8 @@ export class HomeComponent implements OnInit {
   uploadGoogleFiles(files: FileList) {
     this.loaderService.onNotify(true);
     const observables = [];
-    for (const file of files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
       if (this.googleFiles.filter(googleFile => googleFile.title === file.name).length > 0) {
         this.alertService.info('Файл с именем ' + file.name + ' уже есть на Google Drive');
         continue;
@@ -304,7 +305,8 @@ export class HomeComponent implements OnInit {
   uploadYandexFiles(files: FileList) {
     this.loaderService.onNotify(true);
     const observables = [];
-    for (const file of files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files.item(i);
       if (this.yandexFiles.filter(yandexFile => yandexFile.name === file.name).length > 0) {
         this.alertService.info('Файл с именем ' + file.name + ' уже есть на Яндекс.Диске');
         continue;

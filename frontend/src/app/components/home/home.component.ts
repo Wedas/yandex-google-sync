@@ -274,4 +274,53 @@ export class HomeComponent implements OnInit {
       this.loaderService.onNotify(false);
     });
   }
+
+  uploadGoogleFiles(files: FileList) {
+    this.loaderService.onNotify(true);
+    const observables = [];
+    for (const file of files) {
+      if (this.googleFiles.filter(googleFile => googleFile.title === file.name).length > 0) {
+        this.alertService.info('Файл с именем ' + file.name + ' уже есть на Google Drive');
+        continue;
+      }
+      observables.push(this.googleService.uploadFile(file.type || 'application/octet-stream', file)
+          .pipe(concatMap(googleResponse => {
+            console.log('googleUploadResponse', googleResponse);
+            const googleCreatedFileId = googleResponse.id;
+            return this.googleService.renameFile(googleCreatedFileId, file.name);
+          })));
+    }
+    if (observables.length === 0) {
+      this.loaderService.onNotify(false);
+      return;
+    }
+    forkJoin(observables).subscribe(result => {
+      this.update();
+      this.alertService.success('Файлы успешно загружены на Google Drive');
+      this.loaderService.onNotify(false);
+    });
+  }
+
+  uploadYandexFiles(files: FileList) {
+    this.loaderService.onNotify(true);
+    const observables = [];
+    for (const file of files) {
+      if (this.yandexFiles.filter(yandexFile => yandexFile.name === file.name).length > 0) {
+        this.alertService.info('Файл с именем ' + file.name + ' уже есть на Яндекс.Диске');
+        continue;
+      }
+      observables.push(this.yandexService.requestUploadUrl(file.name).pipe(concatMap(uploadUrl => {
+          return this.yandexService.uploadFile(uploadUrl.href, file);
+        })));
+    }
+    if (observables.length === 0) {
+      this.loaderService.onNotify(false);
+      return;
+    }
+    forkJoin(observables).subscribe(result => {
+      this.update();
+      this.alertService.success('Файлы успешно загружены на Яндекс.Диск');
+      this.loaderService.onNotify(false);
+    });
+  }
 }

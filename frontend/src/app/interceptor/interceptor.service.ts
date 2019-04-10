@@ -5,13 +5,15 @@ import {tap} from 'rxjs/internal/operators';
 import {Router} from '@angular/router';
 import {AlertService} from '../services/alert/alert.service';
 import {NotifierService} from '../services/notifier/notifier.service';
+import {AuthService} from '../services/auth/auth.service';
 
 @Injectable()
 export class ResponseInterceptor implements HttpInterceptor {
 
   constructor(private router: Router,
               private alertService: AlertService,
-              private notifierService: NotifierService) {
+              private notifierService: NotifierService,
+              private authService: AuthService) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -22,10 +24,15 @@ export class ResponseInterceptor implements HttpInterceptor {
         return event;
       },
       (error: HttpErrorResponse) => {
-        // this.router.navigateByUrl('/home');
-        this.alertService.error('Ошибка! ' + (error.message ? error.message : ''));
-        this.notifierService.onNotify(error);
-        console.log('errorResponse', HttpErrorResponse);
+        if (error.status === 403 && error.url.indexOf('localhost') !== -1) {
+          this.alertService.error('Вследствие неактивности ваша сессия истекла');
+          this.authService.logout();
+          this.router.navigateByUrl('/auth');
+        } else {
+          this.alertService.error('Ошибка! ' + (error.message ? error.message : ''));
+          this.notifierService.onNotify(error);
+          console.log('errorResponse', HttpErrorResponse);
+        }
       }));
   }
 }

@@ -38,6 +38,10 @@
           </table>
           <div style="display: flex; justify-content: center">
             <button class="btn btn-primary" (click)="signInGoogle()" *ngIf="!googleService.isSignedIn()">Войти</button>
+            <label for="uploadGoogleFiles" class="btn btn-primary mr-2 mb-0"
+                   *ngIf="googleService.isSignedIn()">Загрузить</label>
+            <input id="uploadGoogleFiles" *ngIf="googleService.isSignedIn()" type="file" multiple
+                   (change)="uploadGoogleFiles($event.target.files)" hidden/>
             <button class="btn btn-primary" (click)="signOutGoogle()" *ngIf="googleService.isSignedIn()">Выйти</button>
           </div>
         </div>
@@ -118,6 +122,10 @@
           </table>
           <div style="display: flex; justify-content: center">
             <button class="btn btn-primary" (click)="signInYandex()" *ngIf="!yandexService.isSignedIn()">Войти</button>
+            <label for="uploadYandexFiles" class="btn btn-primary mr-2 mb-0"
+                   *ngIf="yandexService.isSignedIn()">Загрузить</label>
+            <input id="uploadYandexFiles" *ngIf="yandexService.isSignedIn()" type="file" multiple
+                   (change)="uploadYandexFiles($event.target.files)" hidden/>
             <button class="btn btn-primary" (click)="signOutYandex()" *ngIf="yandexService.isSignedIn()">Выйти</button>
           </div>
         </div>

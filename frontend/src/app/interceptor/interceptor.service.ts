@@ -24,12 +24,11 @@ export class ResponseInterceptor implements HttpInterceptor {
         return event;
       },
       (error: HttpErrorResponse) => {
-        if (error.status === 403 && error.url.indexOf('localhost') !== -1) {
+        if (error.status === 403 && error.url.indexOf('localhost') !== -1 && this.authService.isSignedIn()) {
           this.alertService.error('Вследствие неактивности ваша сессия истекла');
           this.authService.logout();
           this.router.navigateByUrl('/auth');
         } else {
-          this.alertService.error('Ошибка! ' + (error.message ? error.message : ''));
           this.notifierService.onNotify(error);
           console.log('errorResponse', HttpErrorResponse);
         }

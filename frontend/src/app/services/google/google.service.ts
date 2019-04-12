@@ -17,7 +17,7 @@ export class GoogleService {
   googleCodeUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' +
     'scope=https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/userinfo.email&' +
     'access_type=offline&' +
-    'redirect_uri=http://localhost:4200&' +
+    'redirect_uri=http://localhost:4200/home&' +
     'response_type=code&' +
     'client_id=' + this.client_id;
   googleTokenUrl = 'https://www.googleapis.com/oauth2/v3/token';
@@ -39,7 +39,7 @@ export class GoogleService {
             const requestBody = 'code=' + code + '&' +
               'client_id=' + thisService.client_id + '&' +
               'client_secret=' + thisService.client_secret + '&' +
-              'redirect_uri=http://localhost:4200&' +
+              'redirect_uri=http://localhost:4200/home&' +
               'grant_type=authorization_code';
             thisService.http.post<any>(thisService.googleTokenUrl, requestBody, {
               headers: new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded')

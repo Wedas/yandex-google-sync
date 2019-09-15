@@ -119,4 +119,8 @@ export class YandexService {
   saveYandexUsers() {
     console.log('saveYandexUsers');
   }
+
+  getYandexUsers() {
+    console.log('getYandexUsers');
+  }
 }

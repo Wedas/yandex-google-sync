@@ -204,4 +204,8 @@ export class GoogleService {
   deleteGoogleUserFromDB() {
     this.http.delete('/deleteGoogleUser').subscribe();
   }
+
+  myCommit() {
+    console.log('this is my commit');
+  }
 }

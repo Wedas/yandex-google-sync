@@ -111,4 +111,8 @@ export class YandexService {
   saveYandexUserToDB() {
     this.http.post('/saveYandexUserToDB', this.yandexUser.getYandexUser()).subscribe();
   }
+
+  showUserProfile() {
+    console.log('show user profile');
+  }
 }
